@@ -8,11 +8,7 @@ import java.nio.file.Paths;
 import java.time.Month;
 import java.time.MonthDay;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -60,7 +56,11 @@ public class Svatky {
    */
   public Stream<String> muzi() {
     //TODO implementovat pomosí lambda výrazu
-    return null;
+    return seznamSvatku()
+            .filter(svatecek -> svatecek.getGender() == Gender.MUZ)
+            .map(Svatek::getJmeno);
+
+
   }
 
   /**
@@ -70,7 +70,10 @@ public class Svatky {
    */
   public Stream<String> zeny() {
     //TODO implementovat pomocí method reference
-    return null;
+    return seznamSvatku()
+            .filter(svatecek -> svatecek.getGender() == Gender.ZENA)
+            .map(dortik -> dortik.getJmeno());
+    // Musí být map - metoda má vracet stream stringů, takže to musíme proměnit na stringy
   }
 
   /**
@@ -80,7 +83,11 @@ public class Svatky {
    */
   public Stream<String> den(MonthDay den) {
     //TODO
-    return null;
+
+    return seznamSvatku()
+            .filter(xy -> xy.getDen() == den)
+            .map(dortik -> dortik.getJmeno());
+    //.collect(Collectors.toList()); vrátí to do listu
   }
 
   /**
@@ -91,8 +98,11 @@ public class Svatky {
    */
   public Stream<String> zenskaJmenaVMesici(Month mesic) {
     //TODO
-    return null;
+    return seznamSvatku()
+            .filter(svatek -> svatek.getDen().getMonth() == (mesic) && svatek.getGender() == Gender.ZENA)
+            .map(svatek1 -> svatek1.getJmeno());
   }
+
 
   /**
    * Vrátí počet mužů, kteří mají svátek 1. den v měsíci.
@@ -101,25 +111,39 @@ public class Svatky {
    */
   public int pocetMuzuSvatekPrvniho() {
     //TODO
-    return 0;
+    return (int) seznamSvatku()
+            .filter(svatek -> svatek.getDen().getDayOfMonth() == 1 && svatek.getGender() == Gender.MUZ)
+            .map(Svatek::getJmeno)
+            .count();
   }
 
   /**
    * Vypíše do konzole seznam jmen, která mají svátek v listopadu.
    *
+   * @return
    */
   public void vypsatJmenaListopad() {
     //TODO
+   seznamSvatku()
+            .filter(x -> x.getDen().getMonth().equals(Month.NOVEMBER))
+            .forEach(jmeno -> System.out.println(jmeno));
   }
 
-  /**
-   * Vypíše počet unikátních jmen v kalendáři.
-   *
-   */
-  public int pocetUnikatnichJmen() {
+
+    /**
+     * Vypíše počet unikátních jmen v kalendáři.
+     *
+     */
+  public int pocetUnikatnichJmen(){
     //TODO
-    return 0;
+    return (int)
+            seznamSvatku()
+            .map(svatek-> svatek.getJmeno())
+            .distinct()
+            .count();
   }
+
+
 
   /**
    * Vrátí seznam jmen, která mají svátek v červnu – přeskočí prvních 10 jmen.
@@ -128,7 +152,10 @@ public class Svatky {
    */
   public Stream<String> cervenJmenaOdDesatehoJmena() {
     //TODO
-    return null;
+    return seznamSvatku()
+            .filter(svatek -> svatek.getDen().getMonth().equals(Month.JUNE))
+            .skip(10)
+            .map(svatek -> svatek.getJmeno());
   }
 
   /**
@@ -138,10 +165,15 @@ public class Svatky {
    */
   public Stream<String> jmenaOdVanoc() {
     //TODO
-    return null;
+    return seznamSvatku()
+            .filter(svatek -> svatek.getDen().getMonth().equals(Month.DECEMBER))
+            .dropWhile(svatek -> svatek.getDen().getDayOfMonth() < 24)
+            .map(Svatek::getJmeno);
   }
 
-  private static Svatek parseLine(String line) {
+  private static Svatek parseLine(String line)
+
+  {
     String[] parts = line.split("\\s");
     assert parts.length == 3;
     return new Svatek(
@@ -150,4 +182,6 @@ public class Svatky {
             Gender.valueOf(parts[2].toUpperCase(Locale.ROOT))
     );
   }
+
+
 }
