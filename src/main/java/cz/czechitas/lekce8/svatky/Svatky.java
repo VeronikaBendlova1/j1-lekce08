@@ -34,7 +34,7 @@ public class Svatky {
    */
   public Stream<Svatek> svatkyVMesici(Month mesic) {
     return seznamSvatku()
-            .filter(svatek -> svatek.getDen().getMonth() == mesic);
+            .filter(svatek -> svatek.getDen().getMonth().equals( mesic));
   }
 
   /**
@@ -57,7 +57,7 @@ public class Svatky {
   public Stream<String> muzi() {
     //TODO implementovat pomosí lambda výrazu
     return seznamSvatku()
-            .filter(svatecek -> svatecek.getGender() == Gender.MUZ)
+            .filter(svatecek -> svatecek.getGender().equals(Gender.MUZ))
             .map(Svatek::getJmeno);
 
 
@@ -71,7 +71,7 @@ public class Svatky {
   public Stream<String> zeny() {
     //TODO implementovat pomocí method reference
     return seznamSvatku()
-            .filter(svatecek -> svatecek.getGender() == Gender.ZENA)
+            .filter(svatecek -> svatecek.getGender().equals(Gender.ZENA))
             .map(dortik -> dortik.getJmeno());
     // Musí být map - metoda má vracet stream stringů, takže to musíme proměnit na stringy
   }
@@ -85,7 +85,7 @@ public class Svatky {
     //TODO
 
     return seznamSvatku()
-            .filter(xy -> xy.getDen() == den)
+            .filter(xy -> xy.getDen().equals( den))
             .map(dortik -> dortik.getJmeno());
     //.collect(Collectors.toList()); vrátí to do listu
   }
@@ -99,7 +99,7 @@ public class Svatky {
   public Stream<String> zenskaJmenaVMesici(Month mesic) {
     //TODO
     return seznamSvatku()
-            .filter(svatek -> svatek.getDen().getMonth() == (mesic) && svatek.getGender() == Gender.ZENA)
+            .filter(svatek -> svatek.getDen().getMonth().equals(mesic) && svatek.getGender().equals(Gender.ZENA))
             .map(svatek1 -> svatek1.getJmeno());
   }
 
@@ -112,7 +112,7 @@ public class Svatky {
   public int pocetMuzuSvatekPrvniho() {
     //TODO
     return (int) seznamSvatku()
-            .filter(svatek -> svatek.getDen().getDayOfMonth() == 1 && svatek.getGender() == Gender.MUZ)
+            .filter(svatek -> svatek.getDen().getDayOfMonth() == 1 && svatek.getGender().equals(Gender.MUZ))
             .map(Svatek::getJmeno)
             .count();
   }
